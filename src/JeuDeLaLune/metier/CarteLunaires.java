@@ -1,4 +1,4 @@
-package metier;
+package JeuDeLaLune.metier;
 
 public enum CarteLunaires 
 {

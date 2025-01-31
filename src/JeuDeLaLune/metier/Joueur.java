@@ -1,4 +1,4 @@
-package metier;
+package JeuDeLaLune.metier;
 
 import java.util.ArrayList;
 import java.util.List;
