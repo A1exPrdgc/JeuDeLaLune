@@ -5,13 +5,15 @@ import java.util.List;
 
 public class Joueur 
 {
-    private static final int TAILLE_MAIN = 3;
+    public static final int TAILLE_MAIN = 3;
 
     private List<CarteLunaires> mainCarteLunaires;
 
     public Joueur()
     {
         this.mainCarteLunaires = new ArrayList<CarteLunaires>(Joueur.TAILLE_MAIN);
+
+        this.remplirMain();
     }
    
 
@@ -29,5 +31,17 @@ public class Joueur
         {
             this.mainCarteLunaires.remove(index);
         }
+    }
+
+    public void remplirMain()
+    {
+        for (int i = 0; i < TAILLE_MAIN; i++) 
+        {
+            this.ajouterCarteAleatoire();    
+        }
+    }
+
+    public List<CarteLunaires> getMainCarteLunaires() {
+        return this.mainCarteLunaires;
     }
 }
