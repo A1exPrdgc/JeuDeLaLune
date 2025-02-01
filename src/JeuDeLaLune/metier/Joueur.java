@@ -11,7 +11,7 @@ public class Joueur
 
     public Joueur()
     {
-        this.mainCarteLunaires = new ArrayList<CarteLunaires>(3);
+        this.mainCarteLunaires = new ArrayList<CarteLunaires>(Joueur.TAILLE_MAIN);
     }
    
 
@@ -23,11 +23,11 @@ public class Joueur
         }
     }
 
-    public void retirerPremiereCarte()
+    public void retirerCarte(int index)
     {
         if(this.mainCarteLunaires.size() > 0)
         {
-            this.mainCarteLunaires.remove(0);
+            this.mainCarteLunaires.remove(index);
         }
     }
 }

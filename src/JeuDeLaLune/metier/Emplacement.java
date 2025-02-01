@@ -1,14 +1,20 @@
 package JeuDeLaLune.metier;
 
+import java.io.File;
 import java.util.HashSet;
 
 public class Emplacement 
 {
+    private static final int NB_IMAGES = (new File("./src/JeuDeLaLune/ressources/images/emplacements")).listFiles().length;
+
     private int x;
     private int y;
 
     private static int nbEmplacements = 0;
     private int numEmplacement;
+    private int idImage;
+    private CarteLunaires carteAssocie;
+    private TypeJoueur possesseur;
 
     private HashSet<Emplacement> lstEmplacementsVoisins;
 
@@ -16,6 +22,8 @@ public class Emplacement
     {
         this.numEmplacement         = nbEmplacements++;
         this.lstEmplacementsVoisins = new HashSet<Emplacement>();
+
+        this.idImage = (int)(Math.random() * (Emplacement.NB_IMAGES - 1));
 
         this.x = x;
         this.y = y;
@@ -37,11 +45,32 @@ public class Emplacement
         this.y = y;
     }
 
+    public int getIdImage() {
+        return this.idImage;
+    }
+
     public boolean ajouterVoisin(Emplacement voisin)
     {
         if (!this.estVoisinDejaExistant(voisin)) 
         {
             this.lstEmplacementsVoisins.add(voisin);   
+            return true;
+        }
+        return false;
+    }
+
+    public boolean attribuerPossesseur(int id)
+    {
+        if(this.possesseur == null)
+        {
+            if(id == 0)
+            {
+                this.possesseur = TypeJoueur.JOUEUR;
+            }
+            else
+            {
+                this.possesseur = TypeJoueur.MACHINE;
+            }
             return true;
         }
         return false;
@@ -58,6 +87,16 @@ public class Emplacement
 
     public HashSet<Emplacement> getLstEmplacementsVoisins() {
         return lstEmplacementsVoisins;
+    }
+
+    public boolean associerCarte(CarteLunaires carte)
+    {
+        if(this.carteAssocie == null)
+        {
+            this.carteAssocie = carte;
+            return true;
+        }
+        return false;
     }
 
     public boolean estVoisinDejaExistant(Emplacement emplacement)
@@ -94,5 +133,9 @@ public class Emplacement
     {
         String s = "Emplacement " + (char)(this.numEmplacement + 'A') + " [" + this.x + "," + this.y + "]";  
         return s;  
+    }
+
+    public CarteLunaires getCarteAssocie() {
+        return carteAssocie;
     }
 }

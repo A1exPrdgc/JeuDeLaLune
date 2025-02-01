@@ -8,6 +8,7 @@ import JeuDeLaLune.Controleur;
 public class MetierPlateau 
 {
     private List<Emplacement> plateauDeJeu;
+    @SuppressWarnings("unused")
     private Controleur ctrl;
 
     public MetierPlateau(Controleur ctrl)
@@ -47,9 +48,9 @@ public class MetierPlateau
         //fait les connections entre les emplacements (jusq'à 3 connections par emplacements)
         for (int i = 0; i < nbEmplacements; i++) 
         {
-            Emplacement emplacementCible = this.getEmplacementAUnIndice(i);   
+            Emplacement emplacementCible = this.getEmplacementAUnIndice(i);
 
-            int nbVoisins = MetierPlateau.genererChiffreAleatoireEntreMinMaxAFrequence(2, 4, 0);
+            int nbVoisins = 3;//MetierPlateau.genererChiffreAleatoireEntreMinMaxAFrequence(3, 5, 0);
 
             int nbVoisinAAjouter = nbVoisins - emplacementCible.getLstEmplacementsVoisins().size();
             
@@ -66,6 +67,7 @@ public class MetierPlateau
                 }   
             }
         }
+        System.out.println("Génération terminé");
     }
 
     public boolean estEmplacementDejaExistant(Emplacement emplacement)
