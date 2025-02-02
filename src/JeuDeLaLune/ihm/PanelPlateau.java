@@ -29,7 +29,10 @@ public class PanelPlateau extends JPanel
             e.printStackTrace();
         }
 
-        this.addMouseListener(new GestionnaireSouris());
+        GestionnaireSouris handler = new GestionnaireSouris();
+        this.addMouseListener(handler);
+        this.addMouseMotionListener(handler);
+
     }
 
     @Override
@@ -51,24 +54,21 @@ public class PanelPlateau extends JPanel
     private class GestionnaireSouris extends MouseAdapter
     {
         @Override
-        public void mouseClicked(MouseEvent e) 
+        public void mousePressed(MouseEvent e) 
         {
-            // TODO Auto-generated method stub
-            super.mouseClicked(e);
+            PanelPlateau.this.ctrl.getCarteClique(e);
         }
 
         @Override
         public void mouseDragged(MouseEvent e) 
         {
-            // TODO Auto-generated method stub
-            super.mouseDragged(e);
+            PanelPlateau.this.ctrl.carteEnMouvement(e);
         }
 
         @Override
         public void mouseReleased(MouseEvent e) 
         {
-            // TODO Auto-generated method stub
-            super.mouseReleased(e);
+            PanelPlateau.this.ctrl.actionsSourisRelache(e);
         }
         
     }

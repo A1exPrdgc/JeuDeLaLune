@@ -39,16 +39,22 @@ public class MetierPlateau
         //place les emplacements sur le plateau de manière aléatoire
         for (int i = 0; i < nbEmplacements; i++) 
         {
-            int cooX = MetierPlateau.genererChiffreAleatoireEntreMinMaxAFrequence(minX, maxX, frequenceX);
-            int cooY = MetierPlateau.genererChiffreAleatoireEntreMinMaxAFrequence(minY, maxY, frequenceY);
+            Emplacement emplacement;
+            do {
+                int cooX = MetierPlateau.genererChiffreAleatoireEntreMinMaxAFrequence(minX, maxX, frequenceX);
+                int cooY = MetierPlateau.genererChiffreAleatoireEntreMinMaxAFrequence(minY, maxY, frequenceY);
+    
+                emplacement = new Emplacement(cooX, cooY);
+            } while (this.estEmplacementDejaExistant(emplacement));
 
-            this.ajouterEmplacementPlateau(new Emplacement(cooX, cooY));
+            this.ajouterEmplacementPlateau(emplacement);
         }
 
         //fait les connections entre les emplacements (jusq'à 3 connections par emplacements)
         for (int i = 0; i < nbEmplacements; i++) 
         {
             Emplacement emplacementCible = this.getEmplacementAUnIndice(i);
+            System.out.println(emplacementCible);
 
             int nbVoisins = 3;//MetierPlateau.genererChiffreAleatoireEntreMinMaxAFrequence(3, 5, 0);
 
@@ -67,7 +73,6 @@ public class MetierPlateau
                 }   
             }
         }
-        System.out.println("Génération terminé");
     }
 
     public boolean estEmplacementDejaExistant(Emplacement emplacement)

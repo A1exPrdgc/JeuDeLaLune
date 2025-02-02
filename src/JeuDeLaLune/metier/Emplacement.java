@@ -13,7 +13,7 @@ public class Emplacement
     private static int nbEmplacements = 0;
     private int numEmplacement;
     private int idImage;
-    private CarteLunaires carteAssocie;
+    private CarteUnique carteAssocie;
     private TypeJoueur possesseur;
 
     private HashSet<Emplacement> lstEmplacementsVoisins;
@@ -89,7 +89,7 @@ public class Emplacement
         return lstEmplacementsVoisins;
     }
 
-    public boolean associerCarte(CarteLunaires carte)
+    public boolean associerCarte(CarteUnique carte)
     {
         if(this.carteAssocie == null)
         {
@@ -135,7 +135,7 @@ public class Emplacement
         return s;  
     }
 
-    public CarteLunaires getCarteAssocie() {
+    public CarteUnique getCarteAssocie() {
         return carteAssocie;
     }
 }

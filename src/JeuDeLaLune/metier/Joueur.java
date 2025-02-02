@@ -3,15 +3,18 @@ package JeuDeLaLune.metier;
 import java.util.ArrayList;
 import java.util.List;
 
+import JeuDeLaLune.Controleur;
+
 public class Joueur 
 {
     public static final int TAILLE_MAIN = 3;
 
-    private List<CarteLunaires> mainCarteLunaires;
+
+    private CarteUnique[] mainCarteUnique;
 
     public Joueur()
     {
-        this.mainCarteLunaires = new ArrayList<CarteLunaires>(Joueur.TAILLE_MAIN);
+        this.mainCarteUnique = new CarteUnique[Joueur.TAILLE_MAIN];
 
         this.remplirMain();
     }
@@ -19,17 +22,48 @@ public class Joueur
 
     public void ajouterCarteAleatoire()
     {
-        if(this.mainCarteLunaires.size() <= Joueur.TAILLE_MAIN)
+        if(this.mainCarteUnique.length <= Joueur.TAILLE_MAIN)
         {
-            this.mainCarteLunaires.add(CarteLunaires.values()[(int)(Math.random() * (CarteLunaires.values().length - 1))]);
+            CarteUnique carteUnique = new CarteUnique(CarteLunaires.values()[(int)(Math.random() * (CarteLunaires.values().length - 1))]);
+            this.mainCarteUnique[this.getFreeSlot()] = carteUnique;
+            System.out.println();
+            carteUnique.setX(Controleur.WIDTH - (((this.getIndexOf(carteUnique) + 1) - (Joueur.TAILLE_MAIN + 1)) * -1) * (64 + 10) - 10); 
+            carteUnique.setY(Controleur.HEIGHT - 64 - 45);
+            carteUnique.setOrigin_x(Controleur.WIDTH - (((this.getIndexOf(carteUnique) + 1) - (Joueur.TAILLE_MAIN + 1)) * -1) * (64 + 10) - 10); 
+            carteUnique.setOrigin_y(Controleur.HEIGHT - 64 - 45);
         }
     }
 
-    public void retirerCarte(int index)
+    public int getIndexOf(CarteUnique carte)
     {
-        if(this.mainCarteLunaires.size() > 0)
+        for (int i = 0; i < mainCarteUnique.length; i++) 
         {
-            this.mainCarteLunaires.remove(index);
+            if(this.mainCarteUnique[i] == carte)
+            {
+                return i;
+            }    
+        }
+        return -1;
+    }
+
+    public int getFreeSlot()
+    {
+        for (int i = 0; i < this.mainCarteUnique.length; i++) 
+        {
+            if(this.mainCarteUnique[i] == null)
+            {
+                return i;
+            }    
+        }
+        return -1;
+    }
+
+    public void retirerCarte(CarteUnique CarteUnique)
+    {
+        if(this.mainCarteUnique.length > 0)
+        {
+            CarteUnique.reduireNum();
+            this.mainCarteUnique[this.getIndexOf(CarteUnique)] = null;
         }
     }
 
@@ -41,7 +75,7 @@ public class Joueur
         }
     }
 
-    public List<CarteLunaires> getMainCarteLunaires() {
-        return this.mainCarteLunaires;
+    public CarteUnique[] getMainCarteUnique() {
+        return this.mainCarteUnique;
     }
 }
