@@ -137,9 +137,17 @@ public class Controleur
             }
             else
             {
-                emplacement.associerCarte(this.carteSelectionnee);
-                this.joueur.retirerCarte(this.carteSelectionnee);
-                this.joueur.ajouterCarteAleatoire();
+                if(emplacement.getCarteAssocie() == null)
+                {
+                    emplacement.associerCarte(this.carteSelectionnee);
+                    this.joueur.retirerCarte(this.carteSelectionnee);
+                    this.joueur.ajouterCarteAleatoire();   
+                }
+                else
+                {
+                    this.carteSelectionnee.setX(this.carteSelectionnee.getOrigin_x());
+                    this.carteSelectionnee.setY(this.carteSelectionnee.getOrigin_y());
+                }
             }
             this.carteSelectionnee = null;
         }
