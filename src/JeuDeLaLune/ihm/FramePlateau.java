@@ -17,7 +17,8 @@ public class FramePlateau extends JFrame
         this.setTitle("Le jeu de la lune");
         this.setSize(Controleur.WIDTH, Controleur.HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //this.setResizable(false);
+        this.setResizable(false);
+        //this.setLocationRelativeTo(null);
 
         this.panel = new PanelPlateau(this.ctrl);
 

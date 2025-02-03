@@ -1,8 +1,5 @@
 package JeuDeLaLune.metier;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import JeuDeLaLune.Controleur;
 
 public class Joueur 
@@ -12,9 +9,12 @@ public class Joueur
 
     private CarteUnique[] mainCarteUnique;
 
+    private int score;
+
     public Joueur()
     {
         this.mainCarteUnique = new CarteUnique[Joueur.TAILLE_MAIN];
+        this.score = 0;
 
         this.remplirMain();
     }
@@ -26,7 +26,6 @@ public class Joueur
         {
             CarteUnique carteUnique = new CarteUnique(CarteLunaires.values()[(int)(Math.random() * (CarteLunaires.values().length - 1))]);
             this.mainCarteUnique[this.getFreeSlot()] = carteUnique;
-            System.out.println();
             carteUnique.setX(Controleur.WIDTH - (((this.getIndexOf(carteUnique) + 1) - (Joueur.TAILLE_MAIN + 1)) * -1) * (64 + 10) - 10); 
             carteUnique.setY(Controleur.HEIGHT - 64 - 45);
             carteUnique.setOrigin_x(Controleur.WIDTH - (((this.getIndexOf(carteUnique) + 1) - (Joueur.TAILLE_MAIN + 1)) * -1) * (64 + 10) - 10); 
@@ -34,9 +33,17 @@ public class Joueur
         }
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return this.score;
+    }
+
     public int getIndexOf(CarteUnique carte)
     {
-        for (int i = 0; i < mainCarteUnique.length; i++) 
+        for (int i = 0; i < mainCarteUnique.length; i++)
         {
             if(this.mainCarteUnique[i] == carte)
             {

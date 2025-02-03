@@ -54,7 +54,6 @@ public class MetierPlateau
         for (int i = 0; i < nbEmplacements; i++) 
         {
             Emplacement emplacementCible = this.getEmplacementAUnIndice(i);
-            System.out.println(emplacementCible);
 
             int nbVoisins = 3;//MetierPlateau.genererChiffreAleatoireEntreMinMaxAFrequence(3, 5, 0);
 

@@ -1,6 +1,7 @@
 package JeuDeLaLune;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
@@ -42,6 +43,7 @@ public class Controleur
         this.dessinerChemin(g2);
         this.dessinerEmplacement(g2);
         this.dessinerMainJoueur(g2);
+        this.dessinerScoreJoueur(g2);
     }
 
     public void dessinerChemin(Graphics2D g2)
@@ -50,7 +52,7 @@ public class Controleur
         {
             for (Emplacement voisin : e.getLstEmplacementsVoisins()) 
             {
-                if(e.getCarteAssocie() == null && voisin.getCarteAssocie() == null)
+                if(e.getCarteAssocie() == null || voisin.getCarteAssocie() == null)
                 {
                     g2.setColor(new Color(65, 27, 184));
                 }
@@ -62,6 +64,13 @@ public class Controleur
                 g2.drawLine(e.getX() + 32, e.getY() + 32, voisin.getX() + 32, voisin.getY() + 32);
             }    
         }
+    }
+
+    public void dessinerScoreJoueur(Graphics2D g2)
+    {
+        g2.setFont(new Font(null, 0, 64));
+        g2.setColor(new Color(255, 237, 165));
+        g2.drawString(String.format("%03d", this.joueur.getScore()), 10, HEIGHT - 50);
     }
 
     public void dessinerEmplacement(Graphics2D g2)
@@ -185,5 +194,17 @@ public class Controleur
             this.carteSelectionnee.setY(e.getY() - 32);
         }
         this.majIhm();
+    }
+
+    public boolean estPartieTermine()
+    {
+        for (Emplacement e : this.metier.getPlateauDeJeu()) 
+        {
+            if(e.getCarteAssocie() == null)
+            {
+                return false;
+            }    
+        }
+        return true;
     }
 }
