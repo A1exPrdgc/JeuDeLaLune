@@ -15,6 +15,7 @@ public class Emplacement
     private int idImage;
     private CarteUnique carteAssocie;
     private TypeJoueur possesseur;
+    private boolean parcouru;
 
     private HashSet<Emplacement> lstEmplacementsVoisins;
 
@@ -27,6 +28,22 @@ public class Emplacement
 
         this.x = x;
         this.y = y;
+
+        this.parcouru = false;
+    }
+
+    public void parcourir()
+    {
+        this.parcouru = true;
+    }
+
+    public void deparcourir()
+    {
+        this.parcouru = false;
+    }
+
+    public boolean isParcouru() {
+        return parcouru;
     }
 
     public int getX() {
@@ -59,21 +76,9 @@ public class Emplacement
         return false;
     }
 
-    public boolean attribuerPossesseur(int id)
+    public void attribuerPossesseur(TypeJoueur typeJoueur)
     {
-        if(this.possesseur == null)
-        {
-            if(id == 0)
-            {
-                this.possesseur = TypeJoueur.JOUEUR;
-            }
-            else
-            {
-                this.possesseur = TypeJoueur.MACHINE;
-            }
-            return true;
-        }
-        return false;
+        this.possesseur = typeJoueur;
     }
 
     public void retirerVoisin(Emplacement voisin)
@@ -136,6 +141,10 @@ public class Emplacement
     }
 
     public CarteUnique getCarteAssocie() {
-        return carteAssocie;
+        return this.carteAssocie;
+    }
+
+    public TypeJoueur getPossesseur() {
+        return this.possesseur;
     }
 }

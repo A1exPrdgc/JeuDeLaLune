@@ -4,7 +4,7 @@ import JeuDeLaLune.Controleur;
 
 public class Joueur 
 {
-    public static final int TAILLE_MAIN = 3;
+    public static final int TAILLE_MAIN = 10;
 
 
     private CarteUnique[] mainCarteUnique;
@@ -39,6 +39,11 @@ public class Joueur
 
     public int getScore() {
         return this.score;
+    }
+
+    public void increaseScore(int val)
+    {
+        this.score += val;
     }
 
     public int getIndexOf(CarteUnique carte)

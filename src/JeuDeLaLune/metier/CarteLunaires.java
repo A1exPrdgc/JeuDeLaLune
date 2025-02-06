@@ -4,13 +4,13 @@ public enum CarteLunaires
 {
     //listes des phases lunaires
     NOUVELLE_LUNE       (0),
-    PREMIER_CROISSANT   (1),
+    PREMIER_CROISSANT   (3),
     PREMIER_QUARTIER    (2),
-    LUNE_GIBBEUSE_1     (3),
-    PLEINE_LUNE         (4),
-    LUNE_GIBBEUSE_2     (5),
-    DERNIER_QUARTIER    (6),
-    DERNIER_CROISSANT   (7);
+    LUNE_GIBBEUSE_1     (1),
+    LUNE_GIBBEUSE_2     (4),
+    DERNIER_QUARTIER    (5),
+    DERNIER_CROISSANT   (6),
+    PLEINE_LUNE         (7);
 
     private int id;
 

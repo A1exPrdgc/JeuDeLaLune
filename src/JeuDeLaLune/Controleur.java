@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.util.List;
 import java.io.File;
 
 import javax.imageio.ImageIO;
@@ -15,6 +16,7 @@ import JeuDeLaLune.metier.CarteUnique;
 import JeuDeLaLune.metier.Emplacement;
 import JeuDeLaLune.metier.Joueur;
 import JeuDeLaLune.metier.MetierPlateau;
+import JeuDeLaLune.metier.TypeJoueur;
 
 public class Controleur 
 {
@@ -128,7 +130,7 @@ public class Controleur
         {
             if(e.getX() >= c.getX() && e.getY() >= c.getY() && e.getX() <= c.getX() + 64 && e.getY() <= c.getY() + 64)
             {
-                System.out.println(c.getCarte().name());
+                //System.out.println(c.getCarte().name());
                 this.carteSelectionnee = c;
             }
         }
@@ -149,6 +151,8 @@ public class Controleur
                 if(emplacement.getCarteAssocie() == null)
                 {
                     emplacement.associerCarte(this.carteSelectionnee);
+                    //TODO penser à configurer les tours
+                    emplacement.attribuerPossesseur(TypeJoueur.JOUEUR);
                     this.joueur.retirerCarte(this.carteSelectionnee);
                     this.joueur.ajouterCarteAleatoire();   
                 }
@@ -160,6 +164,7 @@ public class Controleur
             }
             this.carteSelectionnee = null;
         }
+        this.ContabiliserPoints();
         this.majIhm();
     }
 
@@ -206,5 +211,53 @@ public class Controleur
             }    
         }
         return true;
+    }
+
+    public void ContabiliserPoints()
+    {
+        List<Emplacement> lstEmplacement = this.metier.getPlateauDeJeu();
+
+        this.joueur.setScore(0);
+        for (Emplacement emplacement : lstEmplacement) 
+        {
+            if(emplacement.getPossesseur() != null && emplacement.getCarteAssocie() != null)
+            {
+                //gain par emplacement possédé
+                if(emplacement.getPossesseur() == TypeJoueur.JOUEUR)
+                {
+                    this.joueur.increaseScore(1);
+                }
+
+                for (Emplacement voisin : emplacement.getLstEmplacementsVoisins()) 
+                {
+                    if(voisin.getPossesseur() != null && voisin.getCarteAssocie() != null && !voisin.isParcouru())
+                    {
+                        //gain par 2 carte similaire connecté
+                        if(voisin.getCarteAssocie().getCarte() == emplacement.getCarteAssocie().getCarte() && emplacement.getPossesseur() == voisin.getPossesseur())
+                        {
+                            this.joueur.increaseScore(1);
+                        }
+
+                        //gain par complétion de lune
+                        if(voisin.getCarteAssocie().getCarte().getId() + emplacement.getCarteAssocie().getCarte().getId() == 7 && emplacement.getPossesseur() == voisin.getPossesseur())
+                        {
+                            this.joueur.increaseScore(1);
+                        }
+                        //TODO gain par suite de lune
+                    }
+                }       
+            }
+            emplacement.parcourir();
+        }
+        this.deparcourirTout();
+        System.out.println("FIN");
+    }
+
+    public void deparcourirTout()
+    {
+        for (Emplacement e : this.metier.getPlateauDeJeu()) 
+        {
+            e.deparcourir();    
+        }
     }
 }
