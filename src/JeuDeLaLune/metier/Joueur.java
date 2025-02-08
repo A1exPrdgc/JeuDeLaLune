@@ -4,7 +4,7 @@ import JeuDeLaLune.Controleur;
 
 public class Joueur 
 {
-    public static final int TAILLE_MAIN = 10;
+    public static final int TAILLE_MAIN = 3;
 
 
     private CarteUnique[] mainCarteUnique;
@@ -21,15 +21,17 @@ public class Joueur
    
 
     public void ajouterCarteAleatoire()
-    {
+    {   
+        final int TAILLE_IMAGE = 64;
+
         if(this.mainCarteUnique.length <= Joueur.TAILLE_MAIN)
         {
             CarteUnique carteUnique = new CarteUnique(CarteLunaires.values()[(int)(Math.random() * (CarteLunaires.values().length - 1))]);
             this.mainCarteUnique[this.getFreeSlot()] = carteUnique;
-            carteUnique.setX(Controleur.WIDTH - (((this.getIndexOf(carteUnique) + 1) - (Joueur.TAILLE_MAIN + 1)) * -1) * (64 + 10) - 10); 
-            carteUnique.setY(Controleur.HEIGHT - 64 - 45);
-            carteUnique.setOrigin_x(Controleur.WIDTH - (((this.getIndexOf(carteUnique) + 1) - (Joueur.TAILLE_MAIN + 1)) * -1) * (64 + 10) - 10); 
-            carteUnique.setOrigin_y(Controleur.HEIGHT - 64 - 45);
+            carteUnique.setX(Controleur.WIDTH - (((this.getIndexOf(carteUnique) + 1) - (Joueur.TAILLE_MAIN + 1)) * -1) * (TAILLE_IMAGE + 10) - 10);
+            carteUnique.setY(Controleur.HEIGHT - TAILLE_IMAGE - 45);
+            carteUnique.setOrigin_x(Controleur.WIDTH - (((this.getIndexOf(carteUnique) + 1) - (Joueur.TAILLE_MAIN + 1)) * -1) * (TAILLE_IMAGE + 10) - 10); 
+            carteUnique.setOrigin_y(Controleur.HEIGHT - TAILLE_IMAGE - 45);
         }
     }
 

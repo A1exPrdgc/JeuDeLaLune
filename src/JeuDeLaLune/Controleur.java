@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import java.awt.event.MouseEvent;
 
 import JeuDeLaLune.ihm.FramePlateau;
+import JeuDeLaLune.metier.Bot;
 import JeuDeLaLune.metier.CarteUnique;
 import JeuDeLaLune.metier.Emplacement;
 import JeuDeLaLune.metier.Joueur;
@@ -27,14 +28,20 @@ public class Controleur
     private MetierPlateau metier;
     private FramePlateau ihm;
     private Joueur joueur;
+    private Bot machine;
 
     private CarteUnique carteSelectionnee;
 
+    private int numTour;
+
     public Controleur()
     {
-        this.metier = new MetierPlateau(this);
-        this.ihm    = new FramePlateau (this);
-        this.joueur = new Joueur       ();
+        this.metier  = new MetierPlateau(this);
+        this.ihm     = new FramePlateau (this);
+        this.machine = new Bot          (this);
+        this.joueur  = new Joueur       ();
+
+        this.numTour = 0;
 
         this.metier.genererPlateau(10, Controleur.BORDER, Controleur.BORDER, Controleur.WIDTH - Controleur.BORDER, Controleur.HEIGHT - 200, 100, 100);
         this.ihm.majIhm();
@@ -42,10 +49,12 @@ public class Controleur
 
     public void dessinerTout(Graphics2D g2)
     {
-        this.dessinerChemin(g2);
-        this.dessinerEmplacement(g2);
-        this.dessinerMainJoueur(g2);
-        this.dessinerScoreJoueur(g2);
+        this.dessinerChemin         (g2);
+        this.dessinerEmplacement    (g2);
+        this.dessinerMainJoueur     (g2);
+        this.dessinerScoreJoueur    (g2);
+        this.dessinerScoreMachine   (g2);
+        this.dessinerNbTour         (g2);
     }
 
     public void dessinerChemin(Graphics2D g2)
@@ -73,6 +82,20 @@ public class Controleur
         g2.setFont(new Font(null, 0, 64));
         g2.setColor(new Color(255, 237, 165));
         g2.drawString(String.format("%03d", this.joueur.getScore()), 10, HEIGHT - 50);
+    }
+
+    public void dessinerNbTour(Graphics2D g2)
+    {
+        g2.setFont(new Font(null, 0, 64));
+        g2.setColor(new Color(255, 237, 165));
+        g2.drawString(String.format("%02d", this.numTour), WIDTH - 100, 60);
+    }
+
+    public void dessinerScoreMachine(Graphics2D g2)
+    {
+        g2.setFont(new Font(null, 0, 64));
+        g2.setColor(new Color(255, 237, 165));
+        g2.drawString(String.format("%03d", this.machine.getScore()), 10, 60);
     }
 
     public void dessinerEmplacement(Graphics2D g2)
@@ -130,7 +153,7 @@ public class Controleur
         {
             if(e.getX() >= c.getX() && e.getY() >= c.getY() && e.getX() <= c.getX() + 64 && e.getY() <= c.getY() + 64)
             {
-                //System.out.println(c.getCarte().name());
+                System.out.println(c.getCarte().name());
                 this.carteSelectionnee = c;
             }
         }
@@ -150,11 +173,26 @@ public class Controleur
             {
                 if(emplacement.getCarteAssocie() == null)
                 {
-                    emplacement.associerCarte(this.carteSelectionnee);
-                    //TODO penser à configurer les tours
-                    emplacement.attribuerPossesseur(TypeJoueur.JOUEUR);
-                    this.joueur.retirerCarte(this.carteSelectionnee);
-                    this.joueur.ajouterCarteAleatoire();   
+                    /*if(this.numTour % 2 == 0)
+                    {*/
+                        emplacement.associerCarte(this.carteSelectionnee);
+                        emplacement.attribuerPossesseur(TypeJoueur.JOUEUR);
+                        this.joueur.retirerCarte(this.carteSelectionnee);
+                        this.joueur.ajouterCarteAleatoire();
+                        this.incrementerTour();
+                    /*}
+                    else
+                    {
+                        this.carteSelectionnee.setX(this.carteSelectionnee.getOrigin_x());
+                        this.carteSelectionnee.setY(this.carteSelectionnee.getOrigin_y());
+                    }*/
+                    /*else
+                    {
+                        emplacement.associerCarte(this.carteSelectionnee);
+                        emplacement.attribuerPossesseur(TypeJoueur.MACHINE);
+                        this.machine.retirerCarte(this.carteSelectionnee);
+                        this.machine.ajouterCarteAleatoire();
+                    }   */
                 }
                 else
                 {
@@ -230,27 +268,42 @@ public class Controleur
 
                 for (Emplacement voisin : emplacement.getLstEmplacementsVoisins()) 
                 {
-                    if(voisin.getPossesseur() != null && voisin.getCarteAssocie() != null && !voisin.isParcouru())
+                    if(voisin.getPossesseur() != null && voisin.getCarteAssocie() != null)
                     {
-                        //gain par 2 carte similaire connecté
-                        if(voisin.getCarteAssocie().getCarte() == emplacement.getCarteAssocie().getCarte() && emplacement.getPossesseur() == voisin.getPossesseur())
+                        if(!voisin.isParcouru())
                         {
-                            this.joueur.increaseScore(1);
+                            //gain par 2 carte similaire connecté
+                            if(voisin.getCarteAssocie().getCarte() == emplacement.getCarteAssocie().getCarte() && emplacement.getPossesseur() == voisin.getPossesseur())
+                            {
+                                this.joueur.increaseScore(1);
+                            }
+
+                            //gain par complétion de lune
+                            if(voisin.getCarteAssocie().getCarte().getId() + emplacement.getCarteAssocie().getCarte().getId() == 7 && emplacement.getPossesseur() == voisin.getPossesseur())
+                            {
+                                this.joueur.increaseScore(1);
+                            }
+                            //TODO gain par suite de lune
                         }
 
-                        //gain par complétion de lune
-                        if(voisin.getCarteAssocie().getCarte().getId() + emplacement.getCarteAssocie().getCarte().getId() == 7 && emplacement.getPossesseur() == voisin.getPossesseur())
+                        for (Emplacement voisin2 : emplacement.getLstEmplacementsVoisins()) 
                         {
-                            this.joueur.increaseScore(1);
+                            if (voisin != voisin2 && emplacement.getPossesseur() == voisin.getPossesseur() && emplacement.getPossesseur() == voisin2.getPossesseur()) 
+                            {
+                                if( emplacement.getCarteAssocie().getCarte().getOrdre() == voisin .getCarteAssocie().getCarte().getOrdre() - 1 && 
+                                    emplacement.getCarteAssocie().getCarte().getOrdre() == voisin2.getCarteAssocie().getCarte().getOrdre() + 1)
+                                {
+                                    this.joueur.increaseScore(1);
+                                    System.out.println("suite");
+                                }
+                            }    
                         }
-                        //TODO gain par suite de lune
                     }
-                }       
+                }
             }
             emplacement.parcourir();
         }
         this.deparcourirTout();
-        System.out.println("FIN");
     }
 
     public void deparcourirTout()
@@ -259,5 +312,10 @@ public class Controleur
         {
             e.deparcourir();    
         }
+    }
+
+    public void incrementerTour()
+    {
+        this.numTour++;
     }
 }
