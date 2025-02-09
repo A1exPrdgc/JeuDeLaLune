@@ -268,43 +268,80 @@ public class Controleur
 
                 for (Emplacement voisin : emplacement.getLstEmplacementsVoisins()) 
                 {
-                    if(voisin.getPossesseur() != null && voisin.getCarteAssocie() != null)
+                    //gain par 2 carte similaire connecté
+                    if(estCartesSimilaireParEmplacement(emplacement, voisin))
                     {
-                        if(!voisin.isParcouru())
-                        {
-                            //gain par 2 carte similaire connecté
-                            if(voisin.getCarteAssocie().getCarte() == emplacement.getCarteAssocie().getCarte() && emplacement.getPossesseur() == voisin.getPossesseur())
-                            {
-                                this.joueur.increaseScore(1);
-                            }
-
-                            //gain par complétion de lune
-                            if(voisin.getCarteAssocie().getCarte().getId() + emplacement.getCarteAssocie().getCarte().getId() == 7 && emplacement.getPossesseur() == voisin.getPossesseur())
-                            {
-                                this.joueur.increaseScore(1);
-                            }
-                            //TODO gain par suite de lune
-                        }
-
-                        for (Emplacement voisin2 : emplacement.getLstEmplacementsVoisins()) 
-                        {
-                            if (voisin != voisin2 && emplacement.getPossesseur() == voisin.getPossesseur() && emplacement.getPossesseur() == voisin2.getPossesseur()) 
-                            {
-                                if( emplacement.getCarteAssocie().getCarte().getOrdre() == voisin .getCarteAssocie().getCarte().getOrdre() - 1 && 
-                                    emplacement.getCarteAssocie().getCarte().getOrdre() == voisin2.getCarteAssocie().getCarte().getOrdre() + 1)
-                                {
-                                    this.joueur.increaseScore(1);
-                                    System.out.println("suite");
-                                }
-                            }    
-                        }
+                        this.joueur.increaseScore(1);
                     }
+
+                    //gain par complétion de lune
+                    if(estLuneCompleteParEmplacement(emplacement, voisin))
+                    {
+                        this.joueur.increaseScore(1);
+                    }
+        
+                    //gain par suite de lune
+                    if(estSuiteCompleteParEmplacement(emplacement, voisin))
+                    {
+                        this.joueur.increaseScore(1);
+                    } 
                 }
             }
             emplacement.parcourir();
         }
         this.deparcourirTout();
     }
+
+
+
+
+    public boolean estCartesSimilaireParEmplacement(Emplacement emplacement, Emplacement voisin)
+    {
+        if(voisin.getPossesseur() != null && voisin.getCarteAssocie() != null)
+        {
+            return voisin.getCarteAssocie().getCarte() == emplacement.getCarteAssocie().getCarte() && emplacement.getPossesseur() == voisin.getPossesseur() && !voisin.isParcouru();
+        }
+        return false;
+    }
+
+
+    public boolean estLuneCompleteParEmplacement(Emplacement emplacement, Emplacement voisin)
+    {
+        if(voisin.getPossesseur() != null && voisin.getCarteAssocie() != null)
+        {
+            return voisin.getCarteAssocie().getCarte().getId() + emplacement.getCarteAssocie().getCarte().getId() == 7 && emplacement.getPossesseur() == voisin.getPossesseur() && !voisin.isParcouru();
+        }
+        return false;
+    }
+
+
+    public boolean estSuiteCompleteParEmplacement(Emplacement emplacement, Emplacement voisin)
+    {
+        final int NB_TYPE_CARTES = 7;
+
+        if(voisin.getPossesseur() != null && voisin.getCarteAssocie() != null)
+        {
+            for (Emplacement voisin2 : emplacement.getLstEmplacementsVoisins()) 
+            {    
+                if (voisin != voisin2 && emplacement.getPossesseur() == voisin.getPossesseur() && emplacement.getPossesseur() == voisin2.getPossesseur()) 
+                {
+                    int voisinAvant = (voisin .getCarteAssocie().getCarte().getOrdre() - 1);
+
+                    if(voisinAvant < 0){voisinAvant += 8;}
+
+                    int voisinApres = (voisin2.getCarteAssocie().getCarte().getOrdre() + 1) % (NB_TYPE_CARTES + 1);
+
+                    if( emplacement.getCarteAssocie().getCarte().getOrdre() == voisinAvant && 
+                        emplacement.getCarteAssocie().getCarte().getOrdre() == voisinApres)
+                    {
+                        return true;
+                    }
+                }   
+            }
+        }
+        return false;
+    }
+
 
     public void deparcourirTout()
     {
@@ -317,5 +354,10 @@ public class Controleur
     public void incrementerTour()
     {
         this.numTour++;
+    }
+
+    public List<Emplacement> getPlateauDeJeu()
+    {
+        return this.metier.getPlateauDeJeu();
     }
 }

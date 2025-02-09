@@ -9,7 +9,12 @@ public class Bot extends Joueur
     public Bot(Controleur ctrl)
     {
         super();
-        this.ctrl = ctrl;    
+        this.ctrl = ctrl;
+    }
+
+    public void jouer()
+    {
+        
     }
 
     public void placerCarte()

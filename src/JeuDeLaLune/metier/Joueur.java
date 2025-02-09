@@ -6,10 +6,8 @@ public class Joueur
 {
     public static final int TAILLE_MAIN = 3;
 
-
-    private CarteUnique[] mainCarteUnique;
-
-    private int score;
+    protected CarteUnique[] mainCarteUnique;
+    protected int score;
 
     public Joueur()
     {

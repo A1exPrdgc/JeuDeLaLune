@@ -29,7 +29,7 @@ public enum CarteLunaires
         return ordre;
     }
 
-    public CarteLunaires getCarteParId(int id)
+    public static CarteLunaires getCarteParId(int id)
     {
         for (CarteLunaires c : CarteLunaires.values()) 
         {
