@@ -8,6 +8,7 @@ import java.util.List;
 import java.io.File;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import java.awt.event.MouseEvent;
 
@@ -18,6 +19,8 @@ import JeuDeLaLune.metier.Emplacement;
 import JeuDeLaLune.metier.Joueur;
 import JeuDeLaLune.metier.MetierPlateau;
 import JeuDeLaLune.metier.TypeJoueur;
+
+//TODO : fixer le score du bot
 
 public class Controleur 
 {
@@ -173,26 +176,20 @@ public class Controleur
             {
                 if(emplacement.getCarteAssocie() == null)
                 {
-                    /*if(this.numTour % 2 == 0)
-                    {*/
+                    if(this.numTour % 2 == 0)
+                    {
+                        //le joueur peut jouer
                         emplacement.associerCarte(this.carteSelectionnee);
                         emplacement.attribuerPossesseur(TypeJoueur.JOUEUR);
-                        this.joueur.retirerCarte(this.carteSelectionnee);
-                        this.joueur.ajouterCarteAleatoire();
-                        this.incrementerTour();
-                    /*}
-                    else
-                    {
-                        this.carteSelectionnee.setX(this.carteSelectionnee.getOrigin_x());
-                        this.carteSelectionnee.setY(this.carteSelectionnee.getOrigin_y());
-                    }*/
-                    /*else
-                    {
-                        emplacement.associerCarte(this.carteSelectionnee);
-                        emplacement.attribuerPossesseur(TypeJoueur.MACHINE);
-                        this.machine.retirerCarte(this.carteSelectionnee);
-                        this.machine.ajouterCarteAleatoire();
-                    }   */
+                        this.joueur.jouer(this.carteSelectionnee);
+                    }
+                    this.incrementerTour();
+                    this.ContabiliserPoints();
+                    this.majIhm();
+
+                    //la machine joue après que le joueur il ait jouer
+                    this.machine.jouer();
+                    this.incrementerTour();
                 }
                 else
                 {
@@ -202,13 +199,17 @@ public class Controleur
             }
             this.carteSelectionnee = null;
         }
+        if(this.estPartieTermine())
+        {
+            finDePartie();
+        }
         this.ContabiliserPoints();
         this.majIhm();
     }
 
     public Emplacement getEmplacementAPosSouris(MouseEvent e)
     {
-        for (Emplacement emplacement : this.metier.getPlateauDeJeu()) 
+        for (Emplacement emplacement : this.metier.getPlateauDeJeu())
         {
             if(e.getX() >= emplacement.getX() && e.getY() >= emplacement.getY() && e.getX() <= emplacement.getX() + 64 && e.getY() <= emplacement.getY() + 64)
             {
@@ -223,6 +224,19 @@ public class Controleur
         this.ihm.majIhm();
     }
 
+    public void finDePartie()
+    {
+        this.ihm.setVisible(false);
+        if(this.machine.getScore() > this.joueur.getScore())
+        {
+            JOptionPane.showMessageDialog(null, "L'ordinateur à gagné la partie", "Fin de partie", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Félicitation, vous avez gagné la partie", "Fin de partie", JOptionPane.INFORMATION_MESSAGE);
+        }
+        System.exit(0);
+    }
 
     public static void main(String[] args)
     {
@@ -263,7 +277,7 @@ public class Controleur
                 //gain par emplacement possédé
                 if(emplacement.getPossesseur() == TypeJoueur.JOUEUR)
                 {
-                    this.joueur.increaseScore(1);
+                    this.incrementerScore();
                 }
 
                 for (Emplacement voisin : emplacement.getLstEmplacementsVoisins()) 
@@ -271,19 +285,19 @@ public class Controleur
                     //gain par 2 carte similaire connecté
                     if(estCartesSimilaireParEmplacement(emplacement, voisin))
                     {
-                        this.joueur.increaseScore(1);
+                        this.incrementerScore();
                     }
 
                     //gain par complétion de lune
                     if(estLuneCompleteParEmplacement(emplacement, voisin))
                     {
-                        this.joueur.increaseScore(1);
+                        this.incrementerScore();
                     }
         
                     //gain par suite de lune
                     if(estSuiteCompleteParEmplacement(emplacement, voisin))
                     {
-                        this.joueur.increaseScore(1);
+                        this.incrementerScore();
                     } 
                 }
             }
@@ -302,6 +316,18 @@ public class Controleur
             return voisin.getCarteAssocie().getCarte() == emplacement.getCarteAssocie().getCarte() && emplacement.getPossesseur() == voisin.getPossesseur() && !voisin.isParcouru();
         }
         return false;
+    }
+
+    public void incrementerScore()
+    {
+        if(this.numTour % 2 == 0)
+        {
+            this.joueur.increaseScore(1);
+        }
+        else
+        {
+            this.machine.increaseScore(1);
+        }
     }
 
 

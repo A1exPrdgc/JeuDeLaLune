@@ -2,7 +2,7 @@ package JeuDeLaLune.metier;
 
 import JeuDeLaLune.Controleur;
 
-public class Joueur 
+public class Joueur
 {
     public static final int TAILLE_MAIN = 3;
 
@@ -89,5 +89,12 @@ public class Joueur
 
     public CarteUnique[] getMainCarteUnique() {
         return this.mainCarteUnique;
+    }
+
+
+    public void jouer(CarteUnique carteSelectionnee) 
+    {
+        this.retirerCarte(carteSelectionnee);
+        this.ajouterCarteAleatoire();
     }
 }
